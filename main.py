@@ -33,9 +33,10 @@ if __name__ == "__main__":
     """
     Runs the program a set amount of times and records the stats of each outcome
     """
+
     stat_dict = {}
 
-    iterations = 10_000
+    iterations = 5_000
     for i in range(iterations):
         players = doit()
         # should really change decide_first to combat
