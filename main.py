@@ -31,7 +31,7 @@ def doit():
 
 if __name__ == "__main__":
     """
-    Runs the program a thousand times and records the stats of each outcome
+    Runs the program a set amount of times and records the stats of each outcome
     """
     stat_dict = {}
 

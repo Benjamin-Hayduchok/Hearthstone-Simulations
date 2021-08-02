@@ -140,11 +140,13 @@ def combat_phase(player_1, player_2):
     """
 
     # Need to make it so it checks if the game is over after an attack is made.
-    count = -1
+    p1_count = -1
+    p2_count = -1
     while True:
         # MIGHT NEED TO UPDATE HOW TO WRAP THE COUNT HERE
-        count += 1
-        p1_count = count % len(player_1.minion_list)
+        p1_count += 1
+        p2_count += 1
+        p1_count %=  len(player_1.minion_list)
 
         attack_sequence(player_1, player_2, p1_count)
 
@@ -153,7 +155,7 @@ def combat_phase(player_1, player_2):
         if not winner == "continue":
             return winner
 
-        p2_count = count % len(player_2.minion_list)
+        p2_count %= len(player_2.minion_list)
 
         attack_sequence(player_2, player_1, p2_count)
 
