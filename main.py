@@ -1,6 +1,7 @@
 from Player import Player
 from Minion import Minion
-from simulations_methods import decide_first
+from simulations_methods import combat_phase
+# from simulations_methods import decide_first, reset_player_board
 
 
 def doit():
@@ -26,16 +27,28 @@ def doit():
     cat = Minion("cat", 4, 2)
     player_2 = Player("p2", [tide_hunter, dragon, evil, divine, trog, cat])
 
-    return [player_1, player_2]
+    return player_1, player_2
 
 
 if __name__ == "__main__":
     """
     Runs the program a set amount of times and records the stats of each outcome
     """
+    stat_dict = {"p1": 0, "TIE": 0, "p2": 0}
 
+    iterations = 10_000
+    for i in range(iterations):
+        players = doit()
+        result = combat_phase(players[0], players[1])
+        print(result)
+        stat_dict[result] += 1
+    print(stat_dict)
+
+    for result in stat_dict:
+        print(result + ": " + str(round((stat_dict[result]/iterations * 100), 2)) + "% | ", end="")
+    """
     stat_dict = {}
-
+    
     iterations = 5_000
     for i in range(iterations):
         players = doit()
@@ -47,7 +60,7 @@ if __name__ == "__main__":
             stat_dict[winner] += 1
     print(stat_dict)
     # print(player_1.minion_list[0].health)
-
+    """
     """
     =========================================================================================
     **BUG**: If a minion dies on the left of a minion which is about to attack,
