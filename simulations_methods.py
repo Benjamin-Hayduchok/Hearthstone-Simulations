@@ -241,19 +241,25 @@ def print_board(player):
     print()
 
 
-def remove_dead_minion(minion, player):
+def remove_dead_minion(minion, player, isAttacking, defender_index):
     # print("**DEBUG** removing dead minion: " + minion.name)
+    '''
     for i, o in enumerate(player.minion_list):
         if o.name == minion.name:
             del player.minion_list[i]
             break
+    '''
+    if isAttacking:
+        player.minion_list.pop(0)
+    else:
+        player.minion_list.pop(defender_index)
     print_board(player)
 
 
-def check_alive(minion, player, isAttacking):
+def check_alive(minion, player, isAttacking, defender_index):
     if minion.health <= 0:
         print(minion.name + " died during combat")
-        remove_dead_minion(minion, player)
+        remove_dead_minion(minion, player, isAttacking, defender_index)
     else:
         # print(minion.name + " lived during combat")
         if isAttacking:
@@ -263,7 +269,7 @@ def check_alive(minion, player, isAttacking):
             print_board(player)
 
 
-def attack(minion_1, attacker, minion_2, defender):
+def attack(minion_1, attacker, minion_2, defender_index, defender):
     """
     Simulates the attack of two minions and changes health and records death.
 
@@ -278,8 +284,8 @@ def attack(minion_1, attacker, minion_2, defender):
     # print("**DEBUG Health of " + minion_1.name + ": " + str(minion_1.health))
     # print("**DEBUG Health of " + minion_1.name + ": " + str(minion_2.health))
 
-    check_alive(minion_1, attacker, True)
-    check_alive(minion_2, defender, False)
+    check_alive(minion_1, attacker, True, defender_index)
+    check_alive(minion_2, defender, False, defender_index)
 
 
 def decide_first(player1, player2):
@@ -306,7 +312,7 @@ def get_defending_minion(defender):
     # print("**DEBUG** Getting defending minion for defender: " + defender.name)
     # Generate random number for the random minion defending
     rand_index = random.randint(0, len(defender.minion_list) - 1)
-    return defender.minion_list[rand_index]
+    return defender.minion_list[rand_index], rand_index
 
 
 def check_winner(attacker, defender):
@@ -332,12 +338,12 @@ def attack_sequence(attacker, defender):
     # Attacking minion//It should always be the next in queue, aka left most, aka index 0
     attacking_minion = attacker.minion_list[0]  # may want to make this pop in the future
     # Defender minion
-    defending_minion = get_defending_minion(defender)
+    defending_minion_values = get_defending_minion(defender)
 
     # print("**DEBUG** ATTACKING MINION: " + attacking_minion.name)
     # print("**DEBUG** DEFENDING MINION: " + defending_minion.name)
 
-    attack(attacking_minion, attacker, defending_minion, defender)
+    attack(attacking_minion, attacker, defending_minion_values[0], defending_minion_values[1], defender)
     return check_winner(attacker, defender)
 
 
@@ -362,5 +368,7 @@ def combat_phase(player1, player2):
 
         # break  # Temp break statement only run 1 instance
 
+
 def requeue(minion, player):
     print(str(minion) + " has been re-queued.")
+

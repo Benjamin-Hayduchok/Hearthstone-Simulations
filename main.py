@@ -1,7 +1,7 @@
+import datetime
 from Player import Player
 from Minion import Minion
 from simulations_methods import combat_phase
-# from simulations_methods import decide_first, reset_player_board
 
 
 def doit():
@@ -35,40 +35,17 @@ if __name__ == "__main__":
     Runs the program a set amount of times and records the stats of each outcome
     """
     stat_dict = {"p1": 0, "TIE": 0, "p2": 0}
-
-    iterations = 10_000
+    begin_time = datetime.datetime.now()
+    iterations = 3_000
     for i in range(iterations):
         players = doit()
         result = combat_phase(players[0], players[1])
-        print(result)
+        print("Winner: " + result)
         stat_dict[result] += 1
     print(stat_dict)
 
+    print("|")
     for result in stat_dict:
         print(result + ": " + str(round((stat_dict[result]/iterations * 100), 2)) + "% | ", end="")
-    """
-    stat_dict = {}
-    
-    iterations = 5_000
-    for i in range(iterations):
-        players = doit()
-        # should really change decide_first to combat
-        winner = decide_first(players[0], players[1])
-        if winner not in stat_dict:
-            stat_dict[winner] = 1
-        else:
-            stat_dict[winner] += 1
-    print(stat_dict)
-    # print(player_1.minion_list[0].health)
-    """
-    """
-    =========================================================================================
-    **BUG**: If a minion dies on the left of a minion which is about to attack,
-    the minion that should be attacking next is moving into the slot that is considered 
-    to have attacked already
-        >> **POSSIBLE FIX**: Have a boolean value that checks if a minion attacks,
-            and then reset the attack values when the % is triggered to cycle back around.
-    =========================================================================================
-    
-    
-    """
+    print()
+    print(datetime.datetime.now() - begin_time)
